@@ -21,7 +21,7 @@ export class Launch extends Component {
                 <h1 className="display-4 my-3"> Lanches</h1>
                 <Query query={LAUNCHES_QUERY}>
                     {
-                        
+                       {} 
                     }
                 </Query>
             </div>
