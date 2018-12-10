@@ -10,6 +10,6 @@ app.use('/graphql', graphqlHTTP ({
 
 const Port = process.env.Port || 5000 
 
-app.listen(Port = () => {
+app.listen(Port , () => {
     console.log(`Server started on port ${Port}`)
 })

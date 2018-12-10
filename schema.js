@@ -1,45 +1,62 @@
 const axios = require('axios')
-const { 
+const {
     GraphQLObjectType,
     GraphQLInt,
-    GraphQLString, 
+    GraphQLString,
     GraphQLBoolean,
-    GraphQLList
-} = require('graphql');
+    GraphQLList,
+    GraphQLSchema
+  } = require('graphql');
 
-const LanchType = new GraphQLObjectType({
-    name: 'Lanch',
+// Launch Type
+const LaunchType = new GraphQLObjectType({
+    name: 'Launch',
     fields: () => ({
       flight_number: { type: GraphQLInt },
-      mission_name: { type: GraphQLString},
+      mission_name: { type: GraphQLString },
       launch_year: { type: GraphQLString },
-      launch_date_local: { type: GraphQlString },
+      launch_date_local: { type: GraphQLString },
       launch_success: { type: GraphQLBoolean },
       rocket: { type: RocketType }
     })
-})
-
-// Rocket type
-const RocketType = new GraphQLObjectType({
+  });
+  
+  // Rocket Type
+  const RocketType = new GraphQLObjectType({
     name: 'Rocket',
     fields: () => ({
       rocket_id: { type: GraphQLString },
       rocket_name: { type: GraphQLString },
       rocket_type: { type: GraphQLString }
     })
-})
+  });
+  
 
 
 // Root Query 
-const RootQuery = new GraphQLObjectType({ 
+const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        lanches: {
-            type: new GraphQLObjectType (LanchType),
-            resolve(parent , args) { 
-                return axios.get('https://api.spacedata.com/v3/launches')
+        launches: {
+            type: new GraphQLList(LaunchType),
+            resolve( parent , args) { 
+                return axios.get('https://api.spacexdata.com/v3/launches/')
                 .then( res => res.data)
+            }
+        },
+        launch: {
+            type: LaunchType,
+            args: {
+                flight_number: {type: GraphQLInt }
+            },
+            resolve(parent, args) {
+                return axios.get(`https://api.spacexdata.com/v3/launches/${args.flight_number}/`)
+                .then(res => res.data )
             }
         }
     }
+})
+
+module.exports = new GraphQLSchema({
+    query: RootQuery
 })
