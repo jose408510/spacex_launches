@@ -45,7 +45,7 @@ const RootQuery = new GraphQLObjectType({
             }
         },
         launch: {
-            type: RocketType,
+            type: LaunchType,
             args: {
                 flight_number: {type: GraphQLInt }
             },
